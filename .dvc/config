@@ -1,0 +1,4 @@
+[core]
+    remote = gs_storage
+['remote "gs_storage"']
+    url = gs://dvc-storage-alex000kim/bank-customer-churn
