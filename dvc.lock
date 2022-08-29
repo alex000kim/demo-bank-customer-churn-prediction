@@ -1,0 +1,131 @@
+schema: '2.0'
+stages:
+  data_split:
+    cmd: python src/stages/data_split.py --config=params.yaml
+    deps:
+    - path: data/raw
+      md5: 6920135c1a76a56a030a224fb82afb28.dir
+      size: 466888
+      nfiles: 2
+    - path: src/stages/data_split.py
+      md5: aa8ad6b7934b99ce2ba16b8cf31db280
+      size: 1441
+    params:
+      params.yaml:
+        base:
+          project: bank_customer_churn
+          raw_data_dir: data/raw
+          countries:
+          - France
+          - Spain
+          feat_cols:
+          - CreditScore
+          - Age
+          - Tenure
+          - Balance
+          - NumOfProducts
+          - HasCrCard
+          - IsActiveMember
+          - EstimatedSalary
+          targ_col: Exited
+          random_state: 42
+        data_split:
+          test_size: 0.25
+          processed_data_dir: data/processed
+    outs:
+    - path: data/processed
+      md5: 9f384869826bdf146e6ff572c85d0d1e.dir
+      size: 722258
+      nfiles: 4
+  train:
+    cmd: python src/stages/train.py --config=params.yaml
+    deps:
+    - path: data/processed
+      md5: 9f384869826bdf146e6ff572c85d0d1e.dir
+      size: 722258
+      nfiles: 4
+    - path: src/stages/train.py
+      md5: f728ff9e909da5889ec8867fdfe1f37d
+      size: 2142
+    params:
+      params.yaml:
+        base:
+          project: bank_customer_churn
+          raw_data_dir: data/raw
+          countries:
+          - France
+          - Spain
+          feat_cols:
+          - CreditScore
+          - Age
+          - Tenure
+          - Balance
+          - NumOfProducts
+          - HasCrCard
+          - IsActiveMember
+          - EstimatedSalary
+          targ_col: Exited
+          random_state: 42
+        train:
+          model_type: randomforest
+          model_dir: models
+          model_path: models/clf-model.joblib
+          params:
+            n_estimators: 100
+            max_depth: 10
+    outs:
+    - path: models/clf-model.joblib
+      md5: f33a967420fa80f20a0cc60f77cc9187
+      size: 2936538
+  eval:
+    cmd: python src/stages/eval.py --config=params.yaml
+    deps:
+    - path: data/processed
+      md5: 9f384869826bdf146e6ff572c85d0d1e.dir
+      size: 722258
+      nfiles: 4
+    - path: models/clf-model.joblib
+      md5: f33a967420fa80f20a0cc60f77cc9187
+      size: 2936538
+    - path: src/stages/eval.py
+      md5: 5fd14b7ed03ce42369e2478c1095021f
+      size: 2458
+    params:
+      params.yaml:
+        base:
+          project: bank_customer_churn
+          raw_data_dir: data/raw
+          countries:
+          - France
+          - Spain
+          feat_cols:
+          - CreditScore
+          - Age
+          - Tenure
+          - Balance
+          - NumOfProducts
+          - HasCrCard
+          - IsActiveMember
+          - EstimatedSalary
+          targ_col: Exited
+          random_state: 42
+        data_split:
+          test_size: 0.25
+          processed_data_dir: data/processed
+        train:
+          model_type: randomforest
+          model_dir: models
+          model_path: models/clf-model.joblib
+          params:
+            n_estimators: 100
+            max_depth: 10
+    outs:
+    - path: metrics.json
+      md5: 8943894f261f90a334dd9bdf4ed7db7e
+      size: 67
+    - path: reports/feat_imp.csv
+      md5: 02e9e19a0fe563733f9959969815ff5e
+      size: 185
+    - path: reports/figures/cm.png
+      md5: 422e01a7f99d6bb52f148039f76a6d79
+      size: 10571
