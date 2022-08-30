@@ -1,8 +1,8 @@
 name: deploy-dev
 on:
-  push
-    # tags:
-    #   - "*#dev#*"
+  push:
+    tags:
+      - "*#dev#*"
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -24,18 +24,11 @@ jobs:
           password: ${{ secrets.GOOGLE_CREDENTIALS }}
       - name: Setup DVC
         uses: iterative/setup-dvc@v1
-      - name: Deploy
+      - name: Build Docker image
         run: |
           dvc pull models/clf-model.joblib
           docker build -t us-west1-docker.pkg.dev/intense-runner-360715/example/churn-api-img:latest .
           docker push us-west1-docker.pkg.dev/intense-runner-360715/example/churn-api-img:latest
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v2
-      # - name: Build and push
-      #   uses: docker/build-push-action@v3
-      #   with:
-      #     push: true
-      #     tags: us-west1-docker.pkg.dev/intense-runner-360715/example/churn-api-img:latest
       - name: Deploy
         uses: 'google-github-actions/deploy-cloudrun@v0'
         with:
