@@ -30,6 +30,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
+          context: ./
+          file: Dockerfile
           push: true
           tags: us-west1-docker.pkg.dev/intense-runner-360715/example/churn-api-img:latest
       - name: Deploy
