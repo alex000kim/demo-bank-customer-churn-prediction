@@ -2,9 +2,9 @@ name: deploy-dev
 on:
   push
     # tags:
-    #   - "*#dev*"
+    #   - "*#dev#*"
 jobs:
-  rerun-pipeline:
+  deploy:
     runs-on: ubuntu-latest
     environment: cloud
     permissions:
@@ -12,20 +12,13 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: iterative/setup-cml@v1
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.9"
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v0
         with:
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
-      - name: Setup Git User
-        run: cml ci
-        env:
-          REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Setup DVC
+        uses: iterative/setup-dvc@v1
+      - run: dvc pull models/clf-model.joblib
       - name: Login to GAR
         uses: docker/login-action@v2
         with:
@@ -39,3 +32,8 @@ jobs:
         with:
           push: true
           tags: us-west1-docker.pkg.dev/intense-runner-360715/example/churn-api-img:latest
+      - name: Deploy
+        uses: 'google-github-actions/deploy-cloudrun@v0'
+        with:
+          service: 'web-api-service'
+          image: us-west1-docker.pkg.dev/intense-runner-360715/example/churn-api-img:latest
