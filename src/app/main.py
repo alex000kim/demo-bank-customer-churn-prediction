@@ -24,7 +24,6 @@ app.add_middleware(
 params = load_params(params_path='params.yaml')
 model_path = params.train.model_path
 feat_cols = params.base.feat_cols
-min_batch_size = params.drift_detect.min_batch_size
 model = load(filename=model_path)
 
 schema = {
@@ -47,7 +46,7 @@ schema = {
 }
 
 @app.post("/predict")
-async def predict(info : Request, background_tasks: BackgroundTasks):
+async def predict(info : Request):
     json_list = await info.json()
     validate(instance=json_list, schema=schema)
     input_data = pd.DataFrame(json_list)
