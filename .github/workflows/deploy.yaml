@@ -18,7 +18,10 @@ jobs:
           credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
       - name: Setup DVC
         uses: iterative/setup-dvc@v1
-      - run: dvc pull models/clf-model.joblib
+      - run: |
+          ls -l models/
+          dvc pull models/clf-model.joblib
+          ls -l models/
       - name: Login to GAR
         uses: docker/login-action@v2
         with:
@@ -30,10 +33,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          context: ./
-          file: Dockerfile
           push: true
           tags: us-west1-docker.pkg.dev/intense-runner-360715/example/churn-api-img:latest
+      - run: ls -l models/
       - name: Deploy
         uses: 'google-github-actions/deploy-cloudrun@v0'
         with:
