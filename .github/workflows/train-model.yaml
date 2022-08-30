@@ -41,5 +41,5 @@ jobs:
           echo "## Metrics" >> report.md
           dvc metrics show --md >> report.md
           echo "## Confusion Matrix" >> report.md
-          cml publish eval_plots/cm.png --md >> report.md
+          cml publish reports/figures/cm.png --md >> report.md
           cml send-comment report.md
