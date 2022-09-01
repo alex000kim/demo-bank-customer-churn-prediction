@@ -1,0 +1,14 @@
+dvc[gs]
+python-box
+jupyter
+pandas
+matplotlib
+seaborn
+scikit-learn
+lightgbm
+xgboost
+eli5
+uvicorn
+fastapi
+csv2md
+plotly-express
