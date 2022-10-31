@@ -1,0 +1,4 @@
+[core]
+    remote = gcp_storage
+['remote "gcp_storage"']
+    url = gs://dvc-art/alex000kim
