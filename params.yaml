@@ -26,4 +26,4 @@ train:
   model_path: models/clf-model.joblib
   params:
     n_estimators: 110
-    max_depth: 15
+    max_depth: 35
