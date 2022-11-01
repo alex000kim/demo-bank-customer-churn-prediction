@@ -67,7 +67,7 @@ stages:
           targ_col: Exited
           random_state: 42
         train:
-          model_type: xgboost
+          model_type: lightgbm
           model_dir: models
           model_path: models/clf-model.joblib
           params:
@@ -75,8 +75,8 @@ stages:
             max_depth: 15
     outs:
     - path: models/clf-model.joblib
-      md5: 99c21ff50b34b366e185b7bfb065fddf
-      size: 839873
+      md5: 935ffa720bc6144e95600d23cc1fb4e9
+      size: 380117
   eval:
     cmd: python src/stages/eval.py --config=params.yaml
     deps:
@@ -85,8 +85,8 @@ stages:
       size: 722162
       nfiles: 4
     - path: models/clf-model.joblib
-      md5: 99c21ff50b34b366e185b7bfb065fddf
-      size: 839873
+      md5: 935ffa720bc6144e95600d23cc1fb4e9
+      size: 380117
     - path: src/stages/eval.py
       md5: 578a31a0f41c1b9bd9414baa81b4f131
       size: 2457
@@ -113,7 +113,7 @@ stages:
           test_size: 0.25
           processed_data_dir: data/processed
         train:
-          model_type: xgboost
+          model_type: lightgbm
           model_dir: models
           model_path: models/clf-model.joblib
           params:
@@ -121,11 +121,11 @@ stages:
             max_depth: 15
     outs:
     - path: metrics.json
-      md5: cc5d6bf8454d186e20656fe7f03f3d29
-      size: 67
+      md5: 8dc95ff53283f459aa0c1670e98eb121
+      size: 66
     - path: reports/feat_imp.csv
-      md5: 1a25c09ad944ef87756abe94648f54ab
-      size: 187
+      md5: 027205ce1c74a4d7cb2033387b10c284
+      size: 185
     - path: reports/figures/cm.png
-      md5: 1c08f8f451245ec6cfaf0ba5bb65e189
-      size: 10408
+      md5: c17e926ba20cccf56895461394897cd9
+      size: 10371
