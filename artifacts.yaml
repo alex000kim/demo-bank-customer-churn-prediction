@@ -1,0 +1,6 @@
+churn-model:
+  labels:
+  - classification
+  - churn
+  path: models/clf-model.joblib
+  type: model
