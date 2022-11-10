@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "file:///Users/akim/.vscode/extensions/atlassian.atlascode-2.10.12/resources/schemas/pipelines-schema.json": "bitbucket-pipelines.yml",
+        "https://json.schemastore.org/github-workflow.json": "file:///Users/akim/Desktop/gh/my_repos/demo-bank-customer-churn-prediction/.github/workflows/deploy.yaml"
+    }
+}
