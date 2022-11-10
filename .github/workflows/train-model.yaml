@@ -1,0 +1,45 @@
+name: train-model
+on:
+  push:
+    paths:
+      - "data/**"
+      - "src/**"
+      - "params.yaml"
+      - "dvc.*"
+jobs:
+  train-model:
+    runs-on: ubuntu-latest
+    environment: cloud
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: iterative/setup-cml@v1
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_json: ${{ secrets.GOOGLE_CREDENTIALS }}
+      - name: Setup Git User
+        run: cml ci
+        env:
+          REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      - name: Train model
+        env:
+          REPO_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        run: |
+          pip install -r requirements.txt
+          dvc pull
+          dvc repro
+          dvc push
+          # Create CML report
+          echo "## Metrics" >> report.md
+          dvc metrics show --md >> report.md
+          echo "## Confusion Matrix" >> report.md
+          cml publish reports/figures/cm.png --md >> report.md
+          cml send-comment report.md
